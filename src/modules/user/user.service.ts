@@ -1,8 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 
-import { CreateUserDto } from './interfaces/create-user.interface';
-import { UpdatePasswordDto } from './interfaces/update-password.interface';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 import { User } from './interfaces/user.interface';
 
 @Injectable()
@@ -45,17 +49,26 @@ export class UserService {
   update(id: string, updateUserDto: UpdatePasswordDto) {
     const index = this.users.findIndex((user) => user.id === id);
 
-    if (index !== -1) {
-      const timestamp = new Date().getTime();
-      const updatedUser = {
-        ...this.users[index],
-        updatedAt: timestamp,
-        password: updateUserDto.newPassword,
-      };
-      this.users.splice(index, 1, updatedUser);
-
-      return this.findOne(id);
+    if (index === -1) {
+      throw new NotFoundException(`The user with id ${id} is not found`);
     }
+
+    const existingUser = this.users[index];
+
+    if (existingUser.password !== updateUserDto.oldPassword) {
+      throw new ForbiddenException('Old password is wrong');
+    }
+
+    const timestamp = new Date().getTime();
+    const updatedUser = {
+      ...existingUser,
+      updatedAt: timestamp,
+      version: existingUser.version + 1,
+      password: updateUserDto.newPassword,
+    };
+    this.users.splice(index, 1, updatedUser);
+
+    return this.findOne(id);
   }
 
   delete(id: string) {
