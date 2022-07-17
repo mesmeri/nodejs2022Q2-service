@@ -14,7 +14,7 @@ export class UserService {
   private users: User[] = [];
 
   findOne(id: string) {
-    const user = this.users.find((user) => user.id === id);
+    const user = this.users.find((u) => u.id === id);
 
     if (!user) {
       throw new NotFoundException(`The user with id ${id} is not found`);
@@ -72,7 +72,7 @@ export class UserService {
   }
 
   delete(id: string) {
-    this.users.filter((user) => user.id === id);
+    this.users = this.users.filter((user) => user.id === id);
   }
 
   prepareUserDataForClient(user: User) {
