@@ -8,7 +8,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import uuid from 'uuid';
+import { validate as uuidValidate } from 'uuid';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { Track } from './interfaces/track.interface';
@@ -25,7 +25,7 @@ export class TrackController {
 
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Track> {
-    if (!uuid.validate(id)) {
+    if (!uuidValidate(id)) {
       throw new BadRequestException('Track id is invalid (not uuid)');
     }
 
@@ -42,7 +42,7 @@ export class TrackController {
     @Param('id') @Body() id: string,
     updateTrackDto: UpdateTrackDto,
   ): Promise<Track> {
-    if (!uuid.validate(id)) {
+    if (!uuidValidate(id)) {
       throw new BadRequestException('Track id is invalid (not uuid)');
     }
 
@@ -51,7 +51,7 @@ export class TrackController {
 
   @Delete(':id')
   async delete(@Param('id') id: string): Promise<void> {
-    if (!uuid.validate(id)) {
+    if (!uuidValidate(id)) {
       throw new BadRequestException('Track id is invalid (not uuid)');
     }
 

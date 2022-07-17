@@ -8,7 +8,7 @@ import {
   Delete,
   BadRequestException,
 } from '@nestjs/common';
-import uuid from 'uuid';
+import { validate as uuidValidate } from 'uuid';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
@@ -26,7 +26,7 @@ export class UserController {
 
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<User> {
-    if (!uuid.validate(id)) {
+    if (!uuidValidate(id)) {
       throw new BadRequestException('userId is invalid (not uuid)');
     }
 
@@ -43,7 +43,7 @@ export class UserController {
     @Param('id') @Body() id: string,
     updatePasswordDto: UpdatePasswordDto,
   ): Promise<User> {
-    if (!uuid.validate(id)) {
+    if (!uuidValidate(id)) {
       throw new BadRequestException('userId is invalid (not uuid)');
     }
 
@@ -52,7 +52,7 @@ export class UserController {
 
   @Delete(':id')
   async delete(@Param('id') id: string): Promise<void> {
-    if (!uuid.validate(id)) {
+    if (!uuidValidate(id)) {
       throw new BadRequestException('userId is invalid (not uuid)');
     }
 

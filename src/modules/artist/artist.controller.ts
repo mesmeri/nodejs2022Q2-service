@@ -8,7 +8,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import uuid from 'uuid';
+import { validate as uuidValidate } from 'uuid';
 import { ArtistService } from './artist.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
@@ -25,7 +25,7 @@ export class ArtistController {
 
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Artist> {
-    if (!uuid.validate(id)) {
+    if (!uuidValidate(id)) {
       throw new BadRequestException('Artist id is invalid (not uuid)');
     }
 
@@ -42,7 +42,7 @@ export class ArtistController {
     @Param('id') @Body() id: string,
     updateArtistDto: UpdateArtistDto,
   ): Promise<Artist> {
-    if (!uuid.validate(id)) {
+    if (!uuidValidate(id)) {
       throw new BadRequestException('Artist id is invalid (not uuid)');
     }
 
@@ -51,7 +51,7 @@ export class ArtistController {
 
   @Delete(':id')
   async delete(@Param('id') id: string): Promise<void> {
-    if (!uuid.validate(id)) {
+    if (!uuidValidate(id)) {
       throw new BadRequestException('Artist id is invalid (not uuid)');
     }
 
