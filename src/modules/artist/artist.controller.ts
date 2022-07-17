@@ -4,6 +4,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   ParseUUIDPipe,
   Post,
@@ -14,6 +15,8 @@ import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { Artist } from './interfaces/artist.interface';
 import { AlbumService } from '../album/album.service';
+import { StatusCodes } from 'http-status-codes';
+import { TrackService } from '../track/track.service';
 
 @Controller('artist')
 export class ArtistController {
@@ -21,6 +24,7 @@ export class ArtistController {
     private readonly artistService: ArtistService,
     private readonly favoritesService: FavoritesService,
     private readonly albumService: AlbumService,
+    private readonly trackService: TrackService,
   ) {}
 
   @Get()
@@ -47,9 +51,11 @@ export class ArtistController {
   }
 
   @Delete(':id')
+  @HttpCode(StatusCodes.NO_CONTENT)
   async delete(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
     this.favoritesService.checkIfPresentAndDelete(id, 'artists');
     this.albumService.checkArtistRefsAndDelete(id);
+    this.trackService.checkArtistRefsAndDelete(id);
 
     return this.artistService.delete(id);
   }

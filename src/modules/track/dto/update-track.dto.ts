@@ -1,10 +1,6 @@
-import { IsInt, IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsInt, IsOptional, IsString } from 'class-validator';
 
 export class UpdateTrackDto {
-  @IsString()
-  @IsUUID()
-  id: string;
-
   @IsString()
   name: string;
 

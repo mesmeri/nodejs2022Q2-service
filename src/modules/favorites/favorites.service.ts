@@ -1,21 +1,27 @@
 import {
   BadRequestException,
   Injectable,
-  UnprocessableEntityException,
+  NotFoundException,
 } from '@nestjs/common';
 
 import { Favorites } from './interfaces/favorites.interface';
 
+const db: Favorites = {
+  artists: new Set(),
+  albums: new Set(),
+  tracks: new Set(),
+};
+
 @Injectable()
 export class FavoritesService {
-  private favorites: Favorites = {
-    artists: new Set(),
-    albums: new Set(),
-    tracks: new Set(),
-  };
+  private favorites: Favorites = db;
 
   async findAll() {
-    return this.favorites;
+    return {
+      artists: [...this.favorites.artists],
+      albums: [...this.favorites.albums],
+      tracks: [...this.favorites.tracks],
+    };
   }
 
   async addTrack(id: string) {
@@ -30,7 +36,7 @@ export class FavoritesService {
 
   async removeTrack(id: string) {
     if (!this.favorites.tracks.has(id)) {
-      throw new UnprocessableEntityException(
+      throw new NotFoundException(
         `Track with id ${id} doesn't exist in favorites`,
       );
     }
@@ -49,13 +55,13 @@ export class FavoritesService {
   }
 
   async removeAlbum(id: string) {
-    if (!this.favorites.tracks.has(id)) {
-      throw new UnprocessableEntityException(
+    if (!this.favorites.albums.has(id)) {
+      throw new NotFoundException(
         `Album with id ${id} doesn't exist in favorites`,
       );
     }
 
-    this.favorites.albums.delete(id);
+    return this.favorites.albums.delete(id);
   }
 
   async addArtist(id: string) {
@@ -70,7 +76,7 @@ export class FavoritesService {
 
   async removeArtist(id: string) {
     if (!this.favorites.artists.has(id)) {
-      throw new UnprocessableEntityException(
+      throw new NotFoundException(
         `Artist with id ${id} doesn't exist in favorites`,
       );
     }

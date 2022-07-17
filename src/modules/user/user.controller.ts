@@ -1,3 +1,4 @@
+import { StatusCodes } from 'http-status-codes';
 import {
   Controller,
   Get,
@@ -7,6 +8,7 @@ import {
   Put,
   Delete,
   ParseUUIDPipe,
+  HttpCode,
 } from '@nestjs/common';
 
 import { CreateUserDto } from './dto/create-user.dto';
@@ -42,6 +44,7 @@ export class UserController {
   }
 
   @Delete(':id')
+  @HttpCode(StatusCodes.NO_CONTENT)
   async delete(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
     return this.userService.delete(id);
   }

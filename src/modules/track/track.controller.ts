@@ -4,6 +4,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   ParseUUIDPipe,
   Post,
@@ -13,6 +14,7 @@ import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { Track } from './interfaces/track.interface';
 import { TrackService } from './track.service';
+import { StatusCodes } from 'http-status-codes';
 
 @Controller('track')
 export class TrackController {
@@ -45,6 +47,7 @@ export class TrackController {
   }
 
   @Delete(':id')
+  @HttpCode(StatusCodes.NO_CONTENT)
   async delete(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
     this.favoritesService.checkIfPresentAndDelete(id, 'tracks');
 

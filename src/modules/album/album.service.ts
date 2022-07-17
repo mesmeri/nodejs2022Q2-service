@@ -4,9 +4,10 @@ import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { Album } from './interfaces/album.interface';
 
+const db = [];
 @Injectable()
 export class AlbumService {
-  private albums: Album[] = [];
+  private albums: Album[] = db;
 
   async findOne(id: string) {
     const album = this.albums.find((a) => a.id === id);
@@ -52,7 +53,13 @@ export class AlbumService {
   }
 
   async delete(id: string) {
-    this.albums = this.albums.filter((album) => album.id === id);
+    const index = this.albums.findIndex((a) => a.id === id);
+
+    if (index === -1) {
+      throw new NotFoundException(`The user with id ${id} doesn't exist`);
+    }
+
+    this.albums.splice(index, 1);
   }
 
   async checkArtistRefsAndDelete(id: string) {

@@ -9,9 +9,10 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { User } from './interfaces/user.interface';
 
+const db = [];
 @Injectable()
 export class UserService {
-  private users: User[] = [];
+  private users: User[] = db;
 
   findOne(id: string) {
     const user = this.users.find((u) => u.id === id);
@@ -72,7 +73,13 @@ export class UserService {
   }
 
   delete(id: string) {
-    this.users = this.users.filter((user) => user.id === id);
+    const index = this.users.findIndex((u) => u.id === id);
+
+    if (index === -1) {
+      throw new NotFoundException(`The user with id ${id} doesn't exist`);
+    }
+
+    this.users.splice(index, 1);
   }
 
   prepareUserDataForClient(user: User) {

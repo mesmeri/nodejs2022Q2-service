@@ -4,9 +4,10 @@ import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { Track } from './interfaces/track.interface';
 
+const db = [];
 @Injectable()
 export class TrackService {
-  private tracks: Track[] = [];
+  private tracks: Track[] = db;
 
   async findOne(id: string) {
     const track = this.tracks.find((t) => t.id === id);
@@ -55,7 +56,13 @@ export class TrackService {
   }
 
   async delete(id: string) {
-    this.tracks = this.tracks.filter((track) => track.id === id);
+    const index = this.tracks.findIndex((t) => t.id === id);
+
+    if (index === -1) {
+      throw new NotFoundException(`The track with id ${id} doesn't exist`);
+    }
+
+    this.tracks.splice(index, 1);
   }
 
   async checkArtistRefsAndDelete(id: string) {

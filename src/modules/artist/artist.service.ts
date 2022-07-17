@@ -4,9 +4,11 @@ import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { Artist } from './interfaces/artist.interface';
 
+const db = [];
+
 @Injectable()
 export class ArtistService {
-  private artists: Artist[] = [];
+  private artists: Artist[] = db;
 
   async findOne(id: string) {
     const artist = this.artists.find((a) => a.id === id);
@@ -48,6 +50,12 @@ export class ArtistService {
   }
 
   async delete(id: string) {
-    this.artists = this.artists.filter((artist) => artist.id === id);
+    const index = this.artists.findIndex((a) => a.id === id);
+
+    if (index === -1) {
+      throw new NotFoundException(`The artist with id ${id} doesn't exist`);
+    }
+
+    this.artists.splice(index, 1);
   }
 }
