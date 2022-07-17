@@ -8,14 +8,14 @@ import {
 } from '@nestjs/common';
 import { validate as uuidValidate } from 'uuid';
 import { FavoritesService } from './favorites.service';
-import { Favorites } from './interfaces/favorites.interface';
+import { FavoritesResponse } from './interfaces/favorites-response.interface';
 
 @Controller('favs')
 export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}
 
   @Get()
-  async findAll(): Promise<Favorites> {
+  async findAll(): Promise<FavoritesResponse> {
     return this.favoritesService.findAll();
   }
 

@@ -8,7 +8,7 @@ import { Artist } from './interfaces/artist.interface';
 export class ArtistService {
   private artists: Artist[] = [];
 
-  findOne(id: string) {
+  async findOne(id: string) {
     const artist = this.artists.find((a) => a.id === id);
 
     if (!artist) {
@@ -18,11 +18,11 @@ export class ArtistService {
     return artist;
   }
 
-  findAll() {
+  async findAll() {
     return this.artists;
   }
 
-  create(createArtistDto: CreateArtistDto) {
+  async create(createArtistDto: CreateArtistDto) {
     const id = uuidv4();
 
     this.artists.push({ id, ...createArtistDto });
@@ -30,7 +30,7 @@ export class ArtistService {
     return this.findOne(id);
   }
 
-  update(id: string, updateArtistDto: UpdateArtistDto) {
+  async update(id: string, updateArtistDto: UpdateArtistDto) {
     const index = this.artists.findIndex((artist) => artist.id === id);
 
     if (index === -1) {
@@ -47,7 +47,7 @@ export class ArtistService {
     return this.findOne(id);
   }
 
-  delete(id: string) {
+  async delete(id: string) {
     this.artists = this.artists.filter((artist) => artist.id === id);
   }
 }

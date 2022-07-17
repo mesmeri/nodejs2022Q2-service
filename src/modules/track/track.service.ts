@@ -8,7 +8,7 @@ import { Track } from './interfaces/track.interface';
 export class TrackService {
   private tracks: Track[] = [];
 
-  findOne(id: string) {
+  async findOne(id: string) {
     const track = this.tracks.find((t) => t.id === id);
 
     if (!track) {
@@ -18,11 +18,11 @@ export class TrackService {
     return track;
   }
 
-  findAll() {
+  async findAll() {
     return this.tracks;
   }
 
-  create(createTrackDto: CreateTrackDto) {
+  async create(createTrackDto: CreateTrackDto) {
     const id = uuidv4();
     const artistId = createTrackDto.artistId || null;
     const albumId = createTrackDto.albumId || null;
@@ -32,7 +32,7 @@ export class TrackService {
     return this.findOne(id);
   }
 
-  update(id: string, updateTrackDto: UpdateTrackDto) {
+  async update(id: string, updateTrackDto: UpdateTrackDto) {
     const index = this.tracks.findIndex((track) => track.id === id);
 
     if (index === -1) {
@@ -54,7 +54,7 @@ export class TrackService {
     return this.findOne(id);
   }
 
-  delete(id: string) {
+  async delete(id: string) {
     this.tracks = this.tracks.filter((track) => track.id === id);
   }
 }

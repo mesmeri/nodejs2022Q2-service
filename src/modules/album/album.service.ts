@@ -8,7 +8,7 @@ import { Album } from './interfaces/album.interface';
 export class AlbumService {
   private albums: Album[] = [];
 
-  findOne(id: string) {
+  async findOne(id: string) {
     const album = this.albums.find((a) => a.id === id);
 
     if (!album) {
@@ -18,11 +18,11 @@ export class AlbumService {
     return album;
   }
 
-  findAll() {
+  async findAll() {
     return this.albums;
   }
 
-  create(createAlbumDto: CreateAlbumDto) {
+  async create(createAlbumDto: CreateAlbumDto) {
     const id = uuidv4();
     const artistId = createAlbumDto.artistId || null;
 
@@ -31,7 +31,7 @@ export class AlbumService {
     return this.findOne(id);
   }
 
-  update(id: string, updateAlbumDto: UpdateAlbumDto) {
+  async update(id: string, updateAlbumDto: UpdateAlbumDto) {
     const index = this.albums.findIndex((album) => album.id === id);
 
     if (index === -1) {
@@ -51,7 +51,7 @@ export class AlbumService {
     return this.findOne(id);
   }
 
-  delete(id: string) {
+  async delete(id: string) {
     this.albums = this.albums.filter((album) => album.id === id);
   }
 }

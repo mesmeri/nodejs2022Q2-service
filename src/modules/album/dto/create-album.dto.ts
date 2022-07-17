@@ -1,4 +1,4 @@
-import { IsInt, IsString, Max, Min } from 'class-validator';
+import { IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 
 export class CreateAlbumDto {
   @IsString()
@@ -9,5 +9,7 @@ export class CreateAlbumDto {
   @Max(2022)
   year: number;
 
+  @IsString()
+  @IsOptional()
   artistId: string | null;
 }
