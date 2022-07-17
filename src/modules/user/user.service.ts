@@ -37,7 +37,7 @@ export class UserService {
 
     this.users.push({
       id,
-      version: 0,
+      version: 1,
       createdAt: timestamp,
       updatedAt: timestamp,
       ...createUserDto,

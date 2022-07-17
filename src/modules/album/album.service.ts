@@ -54,4 +54,12 @@ export class AlbumService {
   async delete(id: string) {
     this.albums = this.albums.filter((album) => album.id === id);
   }
+
+  async checkArtistRefsAndDelete(id: string) {
+    this.albums.forEach((album) => {
+      if (album.artistId === id) {
+        album.artistId = null;
+      }
+    });
+  }
 }

@@ -1,5 +1,3 @@
-import { TrackService } from './../track/track.service';
-
 import {
   BadRequestException,
   Injectable,
@@ -7,16 +5,9 @@ import {
 } from '@nestjs/common';
 
 import { Favorites } from './interfaces/favorites.interface';
-import { ArtistService } from '../artist/artist.service';
-import { AlbumService } from '../album/album.service';
 
 @Injectable()
 export class FavoritesService {
-  constructor(
-    private readonly artistService: ArtistService,
-    private readonly albumService: AlbumService,
-    private readonly trackService: TrackService,
-  ) {}
   private favorites: Favorites = {
     artists: new Set(),
     albums: new Set(),
@@ -24,25 +15,7 @@ export class FavoritesService {
   };
 
   async findAll() {
-    const artistsPromises = [...this.favorites.artists].map(async (id) =>
-      this.artistService.findOne(id),
-    );
-    const albumsPromises = [...this.favorites.artists].map(async (id) =>
-      this.albumService.findOne(id),
-    );
-    const tracksPromises = [...this.favorites.artists].map(async (id) =>
-      this.trackService.findOne(id),
-    );
-
-    const artists = await Promise.all(artistsPromises);
-    const albums = await Promise.all(albumsPromises);
-    const tracks = await Promise.all(tracksPromises);
-
-    return {
-      artists,
-      albums,
-      tracks,
-    };
+    return this.favorites;
   }
 
   async addTrack(id: string) {
@@ -103,5 +76,11 @@ export class FavoritesService {
     }
 
     this.favorites.artists.delete(id);
+  }
+
+  async checkIfPresentAndDelete(id: string, key: keyof Favorites) {
+    if (this.favorites[key].has(id)) {
+      this.favorites[key].delete(id);
+    }
   }
 }

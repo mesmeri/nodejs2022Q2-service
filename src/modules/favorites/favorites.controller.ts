@@ -6,16 +6,44 @@ import {
   ParseUUIDPipe,
   Post,
 } from '@nestjs/common';
+import { AlbumService } from '../album/album.service';
+import { ArtistService } from '../artist/artist.service';
+import { TrackService } from '../track/track.service';
 import { FavoritesService } from './favorites.service';
 import { FavoritesResponse } from './interfaces/favorites-response.interface';
 
 @Controller('favs')
 export class FavoritesController {
-  constructor(private readonly favoritesService: FavoritesService) {}
+  constructor(
+    private readonly favoritesService: FavoritesService,
+    private readonly artistService: ArtistService,
+    private readonly albumService: AlbumService,
+    private readonly trackService: TrackService,
+  ) {}
 
   @Get()
   async findAll(): Promise<FavoritesResponse> {
-    return this.favoritesService.findAll();
+    const favorites = await this.favoritesService.findAll();
+
+    const artistsPromises = [...favorites.artists].map(async (id) =>
+      this.artistService.findOne(id),
+    );
+    const albumsPromises = [...favorites.artists].map(async (id) =>
+      this.albumService.findOne(id),
+    );
+    const tracksPromises = [...favorites.artists].map(async (id) =>
+      this.trackService.findOne(id),
+    );
+
+    const artists = await Promise.all(artistsPromises);
+    const albums = await Promise.all(albumsPromises);
+    const tracks = await Promise.all(tracksPromises);
+
+    return {
+      artists,
+      albums,
+      tracks,
+    };
   }
 
   @Post('track/:id')

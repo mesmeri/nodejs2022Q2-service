@@ -57,4 +57,20 @@ export class TrackService {
   async delete(id: string) {
     this.tracks = this.tracks.filter((track) => track.id === id);
   }
+
+  async checkArtistRefsAndDelete(id: string) {
+    this.tracks.forEach((track) => {
+      if (track.artistId === id) {
+        track.artistId = null;
+      }
+    });
+  }
+
+  async checkAlbumRefsAndDelete(id: string) {
+    this.tracks.forEach((track) => {
+      if (track.albumId === id) {
+        track.albumId = null;
+      }
+    });
+  }
 }

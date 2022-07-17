@@ -1,3 +1,4 @@
+import { FavoritesService } from './../favorites/favorites.service';
 import {
   Body,
   Controller,
@@ -15,7 +16,10 @@ import { TrackService } from './track.service';
 
 @Controller('track')
 export class TrackController {
-  constructor(private readonly trackService: TrackService) {}
+  constructor(
+    private readonly trackService: TrackService,
+    private readonly favoritesService: FavoritesService,
+  ) {}
 
   @Get()
   async findAll(): Promise<Track[]> {
@@ -42,6 +46,8 @@ export class TrackController {
 
   @Delete(':id')
   async delete(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
+    this.favoritesService.checkIfPresentAndDelete(id, 'tracks');
+
     return this.trackService.delete(id);
   }
 }
