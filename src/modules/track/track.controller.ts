@@ -1,3 +1,4 @@
+import { ApiTags } from '@nestjs/swagger';
 import { FavoritesService } from './../favorites/favorites.service';
 import {
   Body,
@@ -17,6 +18,7 @@ import { TrackService } from './track.service';
 import { StatusCodes } from 'http-status-codes';
 
 @Controller('track')
+@ApiTags('Track')
 export class TrackController {
   constructor(
     private readonly trackService: TrackService,

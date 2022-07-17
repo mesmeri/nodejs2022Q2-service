@@ -1,3 +1,4 @@
+import { ApiTags } from '@nestjs/swagger';
 import {
   Controller,
   Delete,
@@ -17,6 +18,7 @@ import { FavoritesService } from './favorites.service';
 import { FavoritesResponse } from './interfaces/favorites-response.interface';
 
 @Controller('favs')
+@ApiTags('Favorites')
 export class FavoritesController {
   constructor(
     private readonly favoritesService: FavoritesService,

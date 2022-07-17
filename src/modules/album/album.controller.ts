@@ -1,3 +1,4 @@
+import { ApiTags } from '@nestjs/swagger';
 import { FavoritesService } from './../favorites/favorites.service';
 import {
   Body,
@@ -18,6 +19,7 @@ import { Album } from './interfaces/album.interface';
 import { TrackService } from '../track/track.service';
 
 @Controller('album')
+@ApiTags('Album')
 export class AlbumController {
   constructor(
     private readonly albumService: AlbumService,
