@@ -1,12 +1,11 @@
 import {
-  BadRequestException,
   Controller,
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Post,
 } from '@nestjs/common';
-import { validate as uuidValidate } from 'uuid';
 import { FavoritesService } from './favorites.service';
 import { FavoritesResponse } from './interfaces/favorites-response.interface';
 
@@ -20,56 +19,32 @@ export class FavoritesController {
   }
 
   @Post('track/:id')
-  async addTrack(@Param('id') id: string): Promise<void> {
-    if (!uuidValidate(id)) {
-      throw new BadRequestException('Track id is invalid (not uuid)');
-    }
-
+  async addTrack(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
     return this.favoritesService.addTrack(id);
   }
 
   @Delete('track/:id')
-  async removeTrack(@Param('id') id: string) {
-    if (!uuidValidate(id)) {
-      throw new BadRequestException('Track id is invalid (not uuid)');
-    }
-
+  async removeTrack(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.favoritesService.removeTrack(id);
   }
 
   @Post('album/:id')
-  async addAlbum(@Param('id') id: string): Promise<void> {
-    if (!uuidValidate(id)) {
-      throw new BadRequestException('Album id is invalid (not uuid)');
-    }
-
+  async addAlbum(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
     return this.favoritesService.addAlbum(id);
   }
 
   @Delete('album/:id')
-  async removeAlbum(@Param('id') id: string) {
-    if (!uuidValidate(id)) {
-      throw new BadRequestException('Album id is invalid (not uuid)');
-    }
-
+  async removeAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.favoritesService.removeAlbum(id);
   }
 
   @Post('artist/:id')
-  async addArtist(@Param('id') id: string): Promise<void> {
-    if (!uuidValidate(id)) {
-      throw new BadRequestException('Artist id is invalid (not uuid)');
-    }
-
+  async addArtist(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
     return this.favoritesService.addArtist(id);
   }
 
   @Delete('artist/:id')
-  async removeArtist(@Param('id') id: string) {
-    if (!uuidValidate(id)) {
-      throw new BadRequestException('Artist id is invalid (not uuid)');
-    }
-
+  async removeArtist(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.favoritesService.removeArtist(id);
   }
 }

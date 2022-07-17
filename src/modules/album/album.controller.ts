@@ -1,14 +1,13 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
 } from '@nestjs/common';
-import { validate as uuidValidate } from 'uuid';
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
@@ -24,11 +23,7 @@ export class AlbumController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Album> {
-    if (!uuidValidate(id)) {
-      throw new BadRequestException('Album id is invalid (not uuid)');
-    }
-
+  async findOne(@Param('id', new ParseUUIDPipe()) id: string): Promise<Album> {
     return this.albumService.findOne(id);
   }
 
@@ -39,22 +34,14 @@ export class AlbumController {
 
   @Put(':id')
   async update(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateAlbumDto: UpdateAlbumDto,
   ): Promise<Album> {
-    if (!uuidValidate(id)) {
-      throw new BadRequestException('Album id is invalid (not uuid)');
-    }
-
     return this.albumService.update(id, updateAlbumDto);
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string): Promise<void> {
-    if (!uuidValidate(id)) {
-      throw new BadRequestException('Album id is invalid (not uuid)');
-    }
-
+  async delete(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
     return this.albumService.delete(id);
   }
 }

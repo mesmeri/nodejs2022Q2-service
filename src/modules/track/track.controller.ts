@@ -1,14 +1,13 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
 } from '@nestjs/common';
-import { validate as uuidValidate } from 'uuid';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { Track } from './interfaces/track.interface';
@@ -24,11 +23,7 @@ export class TrackController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Track> {
-    if (!uuidValidate(id)) {
-      throw new BadRequestException('Track id is invalid (not uuid)');
-    }
-
+  async findOne(@Param('id', new ParseUUIDPipe()) id: string): Promise<Track> {
     return this.trackService.findOne(id);
   }
 
@@ -39,22 +34,14 @@ export class TrackController {
 
   @Put(':id')
   async update(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateTrackDto: UpdateTrackDto,
   ): Promise<Track> {
-    if (!uuidValidate(id)) {
-      throw new BadRequestException('Track id is invalid (not uuid)');
-    }
-
     return this.trackService.update(id, updateTrackDto);
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string): Promise<void> {
-    if (!uuidValidate(id)) {
-      throw new BadRequestException('Track id is invalid (not uuid)');
-    }
-
+  async delete(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
     return this.trackService.delete(id);
   }
 }
