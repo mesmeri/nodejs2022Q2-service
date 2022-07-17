@@ -39,8 +39,8 @@ export class TrackController {
 
   @Put(':id')
   async update(
-    @Param('id') @Body() id: string,
-    updateTrackDto: UpdateTrackDto,
+    @Param('id') id: string,
+    @Body() updateTrackDto: UpdateTrackDto,
   ): Promise<Track> {
     if (!uuidValidate(id)) {
       throw new BadRequestException('Track id is invalid (not uuid)');

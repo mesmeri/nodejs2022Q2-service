@@ -46,7 +46,7 @@ export class UserService {
     return this.findOne(id);
   }
 
-  update(id: string, updateUserDto: UpdatePasswordDto) {
+  update(id: string, updatePasswordDto: UpdatePasswordDto) {
     const index = this.users.findIndex((user) => user.id === id);
 
     if (index === -1) {
@@ -55,7 +55,7 @@ export class UserService {
 
     const existingUser = this.users[index];
 
-    if (existingUser.password !== updateUserDto.oldPassword) {
+    if (existingUser.password !== updatePasswordDto.oldPassword) {
       throw new ForbiddenException('Old password is wrong');
     }
 
@@ -64,7 +64,7 @@ export class UserService {
       ...existingUser,
       updatedAt: timestamp,
       version: existingUser.version + 1,
-      password: updateUserDto.newPassword,
+      password: updatePasswordDto.newPassword,
     };
     this.users.splice(index, 1, updatedUser);
 

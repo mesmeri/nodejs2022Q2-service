@@ -39,8 +39,8 @@ export class AlbumController {
 
   @Put(':id')
   async update(
-    @Param('id') @Body() id: string,
-    updateAlbumDto: UpdateAlbumDto,
+    @Param('id') id: string,
+    @Body() updateAlbumDto: UpdateAlbumDto,
   ): Promise<Album> {
     if (!uuidValidate(id)) {
       throw new BadRequestException('Album id is invalid (not uuid)');

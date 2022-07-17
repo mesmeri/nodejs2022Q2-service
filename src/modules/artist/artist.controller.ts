@@ -39,8 +39,8 @@ export class ArtistController {
 
   @Put(':id')
   async update(
-    @Param('id') @Body() id: string,
-    updateArtistDto: UpdateArtistDto,
+    @Param('id') id: string,
+    @Body() updateArtistDto: UpdateArtistDto,
   ): Promise<Artist> {
     if (!uuidValidate(id)) {
       throw new BadRequestException('Artist id is invalid (not uuid)');

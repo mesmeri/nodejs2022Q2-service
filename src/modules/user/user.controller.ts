@@ -40,8 +40,8 @@ export class UserController {
 
   @Put(':id')
   async update(
-    @Param('id') @Body() id: string,
-    updatePasswordDto: UpdatePasswordDto,
+    @Param('id') id: string,
+    @Body() updatePasswordDto: UpdatePasswordDto,
   ): Promise<User> {
     if (!uuidValidate(id)) {
       throw new BadRequestException('userId is invalid (not uuid)');
