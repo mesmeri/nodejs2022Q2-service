@@ -1,0 +1,60 @@
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
+import uuid from 'uuid';
+import { AlbumService } from './album.service';
+import { CreateAlbumDto } from './dto/create-album.dto';
+import { UpdateAlbumDto } from './dto/update-album.dto';
+import { Album } from './interfaces/album.interface';
+
+@Controller('album')
+export class AlbumController {
+  constructor(private readonly albumService: AlbumService) {}
+
+  @Get()
+  async findAll(): Promise<Album[]> {
+    return this.albumService.findAll();
+  }
+
+  @Get(':id')
+  async findOne(@Param('id') id: string): Promise<Album> {
+    if (!uuid.validate(id)) {
+      throw new BadRequestException('Album id is invalid (not uuid)');
+    }
+
+    return this.albumService.findOne(id);
+  }
+
+  @Post()
+  async create(@Body() createAlbumDto: CreateAlbumDto): Promise<Album> {
+    return this.albumService.create(createAlbumDto);
+  }
+
+  @Put(':id')
+  async update(
+    @Param('id') @Body() id: string,
+    updateAlbumDto: UpdateAlbumDto,
+  ): Promise<Album> {
+    if (!uuid.validate(id)) {
+      throw new BadRequestException('Album id is invalid (not uuid)');
+    }
+
+    return this.albumService.update(id, updateAlbumDto);
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') id: string): Promise<void> {
+    if (!uuid.validate(id)) {
+      throw new BadRequestException('Album id is invalid (not uuid)');
+    }
+
+    return this.albumService.delete(id);
+  }
+}
