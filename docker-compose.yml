@@ -2,6 +2,9 @@ version: '3.8'
 services:
   node:
     build: .
+    volumes:
+      - .:/app/src
+      - /app/src/node_modules
     ports:
       - ${PORT}:${PORT}
     depends_on:
