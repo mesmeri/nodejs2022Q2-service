@@ -1,5 +1,25 @@
 version: '3.8'
 services:
+  db:
+    build:
+      context: .
+      dockerfile: ./db/Dockerfile
+    restart: unless-stopped
+    env_file: .env
+    container_name: nest-app-postgres
+    environment:
+      - POSTGRES_USER:${POSTGRES_USER}
+      - POSTGRES_PASSWORD:${POSTGRES_PASSWORD}
+      - POSTGRES_DB:${POSTGRES_DB}
+      - PGDATA:${PGDATA}
+    ports:
+      - 5432:5432
+    networks:
+      - nest-app
+    command: postgres -c logging_collector=on
+    volumes:
+      - nest-app-postgres:${PGDATA}
+
   node:
     build: .
     volumes:
@@ -8,23 +28,15 @@ services:
     ports:
       - ${PORT}:${PORT}
     depends_on:
-      - postgres
+      - db
     environment:
       - PORT=${PORT}
     networks:
       - nest-app
     restart: always
-  postgres:
-    build: ./db/
-    ports:
-      - ${DB_PORT}:${DB_PORT}
-    environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
-      - PGDATA=/var/lib/postgresql/data
-    restart: always
-    command: postgres -c logging_collector=on
+    command: npm run start:dev
+volumes:
+  nest-app-postgres:
 networks:
   nest-app:
     driver: bridge
