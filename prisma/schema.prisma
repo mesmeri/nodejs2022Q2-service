@@ -20,7 +20,7 @@ model User {
 }
 
 model Album {
-  id Int @id @default(autoincrement())
+  id String @id @unique
   
   name String
   year Int

@@ -2,7 +2,6 @@ import { PrismaService } from './../prisma/prisma.service';
 import {
   ForbiddenException,
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
@@ -108,14 +107,10 @@ export class UserService {
       throw new NotFoundException(`The user with id ${id} doesn't exist`);
     }
 
-    const deletedUser = await this.prisma.user.delete({
+    await this.prisma.user.delete({
       where: {
         id,
       },
     });
-
-    if (!deletedUser) {
-      throw new InternalServerErrorException();
-    }
   }
 }
