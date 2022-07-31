@@ -74,19 +74,23 @@ export class UserService {
       throw new NotFoundException(`The user with id ${id} is not found`);
     }
 
-    const oldHash = await argon.hash(updatePasswordDto.oldPassword);
-    const newHash = await argon.hash(updatePasswordDto.oldPassword);
+    const pwMatches = await argon.verify(
+      user.password,
+      updatePasswordDto.oldPassword,
+    );
 
-    if (user.password !== oldHash) {
+    if (!pwMatches) {
       throw new ForbiddenException('Old password is wrong');
     }
+
+    const hash = await argon.hash(updatePasswordDto.newPassword);
 
     const updatedUser = await this.prisma.user.update({
       where: {
         id,
       },
       data: {
-        password: newHash,
+        password: hash,
       },
     });
 
