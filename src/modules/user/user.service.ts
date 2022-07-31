@@ -1,92 +1,121 @@
+import { PrismaService } from './../prisma/prisma.service';
 import {
   ForbiddenException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
+import * as argon from 'argon2';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
-import { User } from './interfaces/user.interface';
 
-const db = [];
 @Injectable()
 export class UserService {
-  private users: User[] = db;
+  constructor(private prisma: PrismaService) {}
 
-  findOne(id: string) {
-    const user = this.users.find((u) => u.id === id);
+  async findOne(id: string) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    console.log({ user });
 
     if (!user) {
       throw new NotFoundException(`The user with id ${id} is not found`);
     }
 
-    return this.prepareUserDataForClient(user);
+    // TODO: replace using prisma
+    delete user.password;
+
+    return user;
   }
 
-  findAll() {
-    const preparedUsersData = this.users.map((user) =>
-      this.prepareUserDataForClient(user),
-    );
+  async findAll() {
+    const users = await this.prisma.user.findMany();
 
-    return preparedUsersData;
-  }
-
-  create(createUserDto: CreateUserDto) {
-    const id = uuidv4();
-    const timestamp = new Date().getTime();
-
-    this.users.push({
-      id,
-      version: 1,
-      createdAt: timestamp,
-      updatedAt: timestamp,
-      ...createUserDto,
+    // TODO: replace using prisma
+    users.forEach((u) => {
+      delete u.password;
     });
 
-    return this.findOne(id);
+    return users;
   }
 
-  update(id: string, updatePasswordDto: UpdatePasswordDto) {
-    const index = this.users.findIndex((user) => user.id === id);
+  async create(createUserDto: CreateUserDto) {
+    const id = uuidv4();
+    const hash = await argon.hash(createUserDto.password);
 
-    if (index === -1) {
+    const user = await this.prisma.user.create({
+      data: {
+        id,
+        version: 1,
+        password: hash,
+        login: createUserDto.login,
+      },
+    });
+
+    // TODO: replace using prisma
+    delete user.password;
+
+    return user;
+  }
+
+  async update(id: string, updatePasswordDto: UpdatePasswordDto) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!user) {
       throw new NotFoundException(`The user with id ${id} is not found`);
     }
 
-    const existingUser = this.users[index];
+    const oldHash = await argon.hash(updatePasswordDto.oldPassword);
+    const newHash = await argon.hash(updatePasswordDto.oldPassword);
 
-    if (existingUser.password !== updatePasswordDto.oldPassword) {
+    if (user.password !== oldHash) {
       throw new ForbiddenException('Old password is wrong');
     }
 
-    const timestamp = new Date().getTime();
-    const updatedUser = {
-      ...existingUser,
-      updatedAt: timestamp,
-      version: existingUser.version + 1,
-      password: updatePasswordDto.newPassword,
-    };
-    this.users.splice(index, 1, updatedUser);
+    const updatedUser = await this.prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        password: newHash,
+      },
+    });
 
-    return this.findOne(id);
+    // TODO: replace using prisma
+    delete updatedUser.password;
+
+    return updatedUser;
   }
 
-  delete(id: string) {
-    const index = this.users.findIndex((u) => u.id === id);
+  async delete(id: string) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
 
-    if (index === -1) {
+    if (!user) {
       throw new NotFoundException(`The user with id ${id} doesn't exist`);
     }
 
-    this.users.splice(index, 1);
-  }
+    const deletedUser = await this.prisma.user.delete({
+      where: {
+        id,
+      },
+    });
 
-  prepareUserDataForClient(user: User) {
-    const userCopy = { ...user };
-
-    delete userCopy.password;
-
-    return userCopy;
+    if (!deletedUser) {
+      throw new InternalServerErrorException();
+    }
   }
 }
