@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
-import { Track } from './interfaces/track.interface';
+import { Track } from '@prisma/client';
 import { TrackService } from './track.service';
 import { StatusCodes } from 'http-status-codes';
 
