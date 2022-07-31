@@ -23,8 +23,7 @@ services:
   node:
     build: .
     volumes:
-      - .:/app/src
-      - /app/src/node_modules
+      - ./src:/app/src
     ports:
       - ${PORT}:${PORT}
     depends_on:
@@ -35,6 +34,7 @@ services:
       - nest-app
     restart: always
     command: npm run start:dev
+    container_name: node-nest-app
 volumes:
   nest-app-postgres:
 networks:
