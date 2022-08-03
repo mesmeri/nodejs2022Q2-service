@@ -1,17 +1,19 @@
+import { PrismaService } from './../prisma/prisma.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
-import { Artist } from './interfaces/artist.interface';
-
-const db = [];
 
 @Injectable()
 export class ArtistService {
-  private artists: Artist[] = db;
+  constructor(private readonly prisma: PrismaService) {}
 
   async findOne(id: string) {
-    const artist = this.artists.find((a) => a.id === id);
+    const artist = await this.prisma.artist.findUnique({
+      where: {
+        id,
+      },
+    });
 
     if (!artist) {
       throw new NotFoundException(`The artist with id ${id} is not found`);
@@ -21,41 +23,63 @@ export class ArtistService {
   }
 
   async findAll() {
-    return this.artists;
+    return this.prisma.artist.findMany();
   }
 
   async create(createArtistDto: CreateArtistDto) {
     const id = uuidv4();
 
-    this.artists.push({ id, ...createArtistDto });
+    const artist = await this.prisma.artist.create({
+      data: {
+        id,
+        name: createArtistDto.name,
+        grammy: createArtistDto.grammy,
+      },
+    });
 
-    return this.findOne(id);
+    return artist;
   }
 
   async update(id: string, updateArtistDto: UpdateArtistDto) {
-    const index = this.artists.findIndex((artist) => artist.id === id);
+    const artist = await this.prisma.artist.findUnique({
+      where: {
+        id,
+      },
+    });
 
-    if (index === -1) {
+    if (!artist) {
       throw new NotFoundException(`The artist with id ${id} is not found`);
     }
 
-    const updatedArtist = {
-      id,
-      ...updateArtistDto,
-    };
+    const updatedArtist = await this.prisma.artist.update({
+      where: {
+        id,
+      },
+      data: {
+        id,
+        name: updateArtistDto.name,
+        grammy: updateArtistDto.grammy,
+      },
+    });
 
-    this.artists.splice(index, 1, updatedArtist);
-
-    return this.findOne(id);
+    return updatedArtist;
   }
 
   async delete(id: string) {
-    const index = this.artists.findIndex((a) => a.id === id);
+    const artist = await this.prisma.artist.findUnique({
+      where: {
+        id,
+      },
+    });
 
-    if (index === -1) {
+    if (!artist) {
       throw new NotFoundException(`The artist with id ${id} doesn't exist`);
     }
 
-    this.artists.splice(index, 1);
+    await this.prisma.artist.delete({
+      where: {
+        id,
+      },
+    });
   }
 }

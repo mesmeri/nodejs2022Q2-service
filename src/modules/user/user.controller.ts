@@ -15,7 +15,7 @@ import { ApiTags } from '@nestjs/swagger';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
-import { User } from './interfaces/user.interface';
+import { User } from '@prisma/client';
 import { UserService } from './user.service';
 
 @Controller('user')
