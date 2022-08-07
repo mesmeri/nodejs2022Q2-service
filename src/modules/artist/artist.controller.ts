@@ -10,6 +10,7 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ArtistService } from './artist.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
@@ -18,7 +19,9 @@ import { Artist } from '@prisma/client';
 import { AlbumService } from '../album/album.service';
 import { StatusCodes } from 'http-status-codes';
 import { TrackService } from '../track/track.service';
+import { JwtGuard } from '../auth/guard/jwt-guard';
 
+@UseGuards(JwtGuard)
 @Controller('artist')
 @ApiTags('Artist')
 export class ArtistController {

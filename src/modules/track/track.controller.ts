@@ -10,13 +10,16 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { Track } from '@prisma/client';
 import { TrackService } from './track.service';
 import { StatusCodes } from 'http-status-codes';
+import { JwtGuard } from '../auth/guard/jwt-guard';
 
+@UseGuards(JwtGuard)
 @Controller('track')
 @ApiTags('Track')
 export class TrackController {
