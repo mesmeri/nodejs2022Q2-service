@@ -11,13 +11,16 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
-import { Album } from './interfaces/album.interface';
+import { Album } from '@prisma/client';
 import { TrackService } from '../track/track.service';
+import { JwtGuard } from '../auth/guards/jwt-guard';
 
+@UseGuards(JwtGuard)
 @Controller('album')
 @ApiTags('Album')
 export class AlbumController {
@@ -54,7 +57,6 @@ export class AlbumController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
     this.favoritesService.checkIfPresentAndDelete(id, 'albums');
-    this.trackService.checkAlbumRefsAndDelete(id);
 
     return this.albumService.delete(id);
   }

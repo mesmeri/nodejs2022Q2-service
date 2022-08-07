@@ -9,6 +9,7 @@ import {
   ParseUUIDPipe,
   Post,
   UnprocessableEntityException,
+  UseGuards,
 } from '@nestjs/common';
 import { StatusCodes } from 'http-status-codes';
 import { AlbumService } from '../album/album.service';
@@ -16,7 +17,9 @@ import { ArtistService } from '../artist/artist.service';
 import { TrackService } from '../track/track.service';
 import { FavoritesService } from './favorites.service';
 import { FavoritesResponse } from './interfaces/favorites-response.interface';
+import { JwtGuard } from '../auth/guards/jwt-guard';
 
+@UseGuards(JwtGuard)
 @Controller('favs')
 @ApiTags('Favorites')
 export class FavoritesController {

@@ -10,15 +10,18 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ArtistService } from './artist.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
-import { Artist } from './interfaces/artist.interface';
+import { Artist } from '@prisma/client';
 import { AlbumService } from '../album/album.service';
 import { StatusCodes } from 'http-status-codes';
 import { TrackService } from '../track/track.service';
+import { JwtGuard } from '../auth/guards/jwt-guard';
 
+@UseGuards(JwtGuard)
 @Controller('artist')
 @ApiTags('Artist')
 export class ArtistController {
@@ -56,8 +59,6 @@ export class ArtistController {
   @HttpCode(StatusCodes.NO_CONTENT)
   async delete(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
     this.favoritesService.checkIfPresentAndDelete(id, 'artists');
-    this.albumService.checkArtistRefsAndDelete(id);
-    this.trackService.checkArtistRefsAndDelete(id);
 
     return this.artistService.delete(id);
   }
