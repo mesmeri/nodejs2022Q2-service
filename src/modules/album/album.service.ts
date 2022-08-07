@@ -89,13 +89,4 @@ export class AlbumService {
       },
     });
   }
-
-  async checkArtistRefsAndDelete(id: string) {
-    // TODO: change implementation using prisma
-    // this.albums.forEach((album) => {
-    //   if (album.artistId === id) {
-    //     album.artistId = null;
-    //   }
-    // });
-  }
 }

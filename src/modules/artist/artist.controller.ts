@@ -59,8 +59,6 @@ export class ArtistController {
   @HttpCode(StatusCodes.NO_CONTENT)
   async delete(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
     this.favoritesService.checkIfPresentAndDelete(id, 'artists');
-    this.albumService.checkArtistRefsAndDelete(id);
-    this.trackService.checkArtistRefsAndDelete(id);
 
     return this.artistService.delete(id);
   }

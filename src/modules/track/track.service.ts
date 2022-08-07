@@ -3,14 +3,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
-import { Track } from './interfaces/track.interface';
 
-const db = [];
 @Injectable()
 export class TrackService {
   constructor(private readonly prisma: PrismaService) {}
-
-  private tracks: Track[] = db;
 
   async findOne(id: string) {
     const track = await this.prisma.track.findUnique({
@@ -94,23 +90,5 @@ export class TrackService {
         id,
       },
     });
-  }
-
-  // TODO: replace using prisma
-  async checkArtistRefsAndDelete(id: string) {
-    // this.tracks.forEach((track) => {
-    //   if (track.artistId === id) {
-    //     track.artistId = null;
-    //   }
-    // });
-  }
-
-  // TODO: replace using prisma
-  async checkAlbumRefsAndDelete(id: string) {
-    // this.tracks.forEach((track) => {
-    //   if (track.albumId === id) {
-    //     track.albumId = null;
-    //   }
-    // });
   }
 }

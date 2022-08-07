@@ -57,7 +57,6 @@ export class AlbumController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
     this.favoritesService.checkIfPresentAndDelete(id, 'albums');
-    this.trackService.checkAlbumRefsAndDelete(id);
 
     return this.albumService.delete(id);
   }
