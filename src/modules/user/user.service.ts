@@ -21,8 +21,6 @@ export class UserService {
       },
     });
 
-    console.log({ user });
-
     if (!user) {
       throw new NotFoundException(`The user with id ${id} is not found`);
     }

@@ -13,7 +13,7 @@ services:
       - POSTGRES_DB:${POSTGRES_DB}
       - PGDATA:${PGDATA}
     ports:
-      - 5432:5432
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
     networks:
       - nest-app
     command: postgres -c logging_collector=on

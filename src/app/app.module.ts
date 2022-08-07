@@ -8,9 +8,11 @@ import { AlbumModule } from 'src/modules/album/album.module';
 import { ArtistModule } from 'src/modules/artist/artist.module';
 import { FavoritesModule } from 'src/modules/favorites/favorites.module';
 import { PrismaModule } from 'src/modules/prisma/prisma.module';
+import { AuthModule } from 'src/modules/auth/auth.module';
 
 @Module({
   imports: [
+    AuthModule,
     UserModule,
     TrackModule,
     AlbumModule,

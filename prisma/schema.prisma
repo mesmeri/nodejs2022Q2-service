@@ -1,6 +1,7 @@
 generator client {
   provider = "prisma-client-js"
   binaryTargets = ["native", "linux-musl"]
+  url = env("DATABASE_URL")
 }
 
 datasource db {
@@ -25,6 +26,10 @@ model Album {
   name String
   year Int
   artistId String?
+  artist Artist? @relation(fields: [artistId], references: [id], onDelete: SetNull)
+  tracks Track[]
+  favoriteId String?
+  favorites Favorites? @relation(fields: [favoriteId], references: [id], onDelete: SetNull)
 }
 
 model Artist {
@@ -32,6 +37,10 @@ model Artist {
 
   name String
   grammy Boolean
+  albums Album[]
+  tracks Track[]
+  favoriteId String?
+  favorites Favorites? @relation(fields: [favoriteId], references: [id], onDelete: SetNull)
 }
 
 model Track {
@@ -39,7 +48,19 @@ model Track {
 
   name String
   artistId String?
+  artist Artist? @relation(fields: [artistId], references: [id], onDelete: SetNull)
   albumId String?
+  album Album? @relation(fields: [albumId], references: [id], onDelete: SetNull)
   duration Int
+  favoriteId String?
+  favorites Favorites? @relation(fields: [favoriteId], references: [id], onDelete: SetNull)
+}
+
+model Favorites {
+  id String @id @default(uuid())
+  
+  artists Artist[]
+  albums Album[]
+  tracks Track[]
 }
 
