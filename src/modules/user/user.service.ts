@@ -14,6 +14,20 @@ import { UpdatePasswordDto } from './dto/update-password.dto';
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
+  async findByLogin(login: string) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        login,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`The user with login ${login} is not found`);
+    }
+
+    return user;
+  }
+
   async findOne(id: string) {
     const user = await this.prisma.user.findUnique({
       where: {
