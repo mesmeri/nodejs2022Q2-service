@@ -59,6 +59,7 @@ export class UserService {
   async create(createUserDto: CreateUserDto) {
     const id = uuidv4();
     const hash = await argon.hash(createUserDto.password);
+    const now = Date.now();
 
     const user = await this.prisma.user.create({
       data: {
@@ -66,6 +67,8 @@ export class UserService {
         version: 1,
         password: hash,
         login: createUserDto.login,
+        createdAt: now,
+        updatedAt: now,
       },
     });
 
@@ -96,6 +99,7 @@ export class UserService {
     }
 
     const hash = await argon.hash(updatePasswordDto.newPassword);
+    const now = Date.now();
 
     const updatedUser = await this.prisma.user.update({
       where: {
@@ -103,6 +107,8 @@ export class UserService {
       },
       data: {
         password: hash,
+        version: ++user.version,
+        updatedAt: now,
       },
     });
 

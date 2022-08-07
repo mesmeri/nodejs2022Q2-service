@@ -13,8 +13,8 @@ model User {
   id String @id @unique
   version Int
   
-  createdAt  DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt  Int
+  updatedAt Int 
 
   login  String
   password String

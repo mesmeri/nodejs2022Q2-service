@@ -23,7 +23,7 @@ export class ArtistService {
   }
 
   async findAll() {
-    return this.prisma.artist.findMany();
+    return await this.prisma.artist.findMany();
   }
 
   async create(createArtistDto: CreateArtistDto) {

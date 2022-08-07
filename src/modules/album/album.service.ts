@@ -9,7 +9,7 @@ export class AlbumService {
   constructor(private readonly prisma: PrismaService) {}
 
   async findOne(id: string) {
-    const album = this.prisma.album.findUnique({
+    const album = await this.prisma.album.findUnique({
       where: {
         id,
       },
@@ -23,14 +23,14 @@ export class AlbumService {
   }
 
   async findAll() {
-    return this.prisma.album.findMany();
+    return await this.prisma.album.findMany();
   }
 
   async create(createAlbumDto: CreateAlbumDto) {
     const id = uuidv4();
     const artistId = createAlbumDto.artistId || null;
 
-    const album = this.prisma.album.create({
+    const album = await this.prisma.album.create({
       data: {
         id,
         artistId,
@@ -43,11 +43,13 @@ export class AlbumService {
   }
 
   async update(id: string, updateAlbumDto: UpdateAlbumDto) {
-    const album = this.prisma.album.findUnique({
+    const album = await this.prisma.album.findUnique({
       where: {
         id,
       },
     });
+
+    console.log({ album });
 
     if (!album) {
       throw new NotFoundException(`The album with id ${id} is not found`);
@@ -71,7 +73,7 @@ export class AlbumService {
   }
 
   async delete(id: string) {
-    const album = this.prisma.album.findUnique({
+    const album = await this.prisma.album.findUnique({
       where: {
         id,
       },

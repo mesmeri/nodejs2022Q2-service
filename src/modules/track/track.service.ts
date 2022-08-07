@@ -27,7 +27,7 @@ export class TrackService {
   }
 
   async findAll() {
-    return this.prisma.track.findMany();
+    return await this.prisma.track.findMany();
   }
 
   async create(createTrackDto: CreateTrackDto) {
