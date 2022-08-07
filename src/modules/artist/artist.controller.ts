@@ -19,7 +19,7 @@ import { Artist } from '@prisma/client';
 import { AlbumService } from '../album/album.service';
 import { StatusCodes } from 'http-status-codes';
 import { TrackService } from '../track/track.service';
-import { JwtGuard } from '../auth/guard/jwt-guard';
+import { JwtGuard } from '../auth/guards/jwt-guard';
 
 @UseGuards(JwtGuard)
 @Controller('artist')

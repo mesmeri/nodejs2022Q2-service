@@ -18,7 +18,7 @@ import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { Album } from '@prisma/client';
 import { TrackService } from '../track/track.service';
-import { JwtGuard } from '../auth/guard/jwt-guard';
+import { JwtGuard } from '../auth/guards/jwt-guard';
 
 @UseGuards(JwtGuard)
 @Controller('album')

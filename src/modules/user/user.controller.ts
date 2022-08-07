@@ -18,7 +18,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { User } from '@prisma/client';
 import { UserService } from './user.service';
-import { JwtGuard } from '../auth/guard/jwt-guard';
+import { JwtGuard } from '../auth/guards/jwt-guard';
 
 @Controller('user')
 @ApiTags('User')

@@ -21,23 +21,49 @@ export class AuthService {
       throw new ForbiddenException('Login or password is incorrect');
     }
 
-    const jwt = await this.signToken(user.id, loginDto.password);
+    const accessToken = await this.signAccessToken(user.id, loginDto.login);
+    const refreshToken = await this.signRefreshToken(user.id, loginDto.login);
 
-    return { access_token: jwt };
+    return { accessToken, refreshToken };
   }
 
-  async signToken(userId: string, password: string) {
+  async refresh(user: any) {
+    const accessToken = await this.signAccessToken(user.id, user.login);
+    const refreshToken = await this.signRefreshToken(user.id, user.login);
+
+    return { accessToken, refreshToken };
+  }
+
+  async signAccessToken(userId: string, login: string) {
     const secret = this.config.get('JWT_SECRET_KEY');
+    const expireTime = this.config.get('TOKEN_EXPIRE_TIME');
+
     const payload = {
       sub: userId,
-      password,
+      login,
     };
 
-    const jwt = await this.jwt.signAsync(payload, {
-      expiresIn: '15m',
+    const accessToken = await this.jwt.signAsync(payload, {
+      expiresIn: expireTime,
       secret,
     });
 
-    return jwt;
+    return accessToken;
+  }
+
+  async signRefreshToken(userId: string, login: string) {
+    const secret = this.config.get('JWT_SECRET_REFRESH_KEY');
+    const expireTime = this.config.get('TOKEN_REFRESH_EXPIRE_TIME');
+    const payload = {
+      sub: userId,
+      login,
+    };
+
+    const refresh_token = await this.jwt.signAsync(payload, {
+      expiresIn: expireTime,
+      secret,
+    });
+
+    return refresh_token;
   }
 }

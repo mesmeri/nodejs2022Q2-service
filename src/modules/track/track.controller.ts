@@ -17,7 +17,7 @@ import { UpdateTrackDto } from './dto/update-track.dto';
 import { Track } from '@prisma/client';
 import { TrackService } from './track.service';
 import { StatusCodes } from 'http-status-codes';
-import { JwtGuard } from '../auth/guard/jwt-guard';
+import { JwtGuard } from '../auth/guards/jwt-guard';
 
 @UseGuards(JwtGuard)
 @Controller('track')
